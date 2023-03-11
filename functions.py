@@ -4,7 +4,7 @@ import csv
 """This fuctions opens the datafile data.csv"""
 def read_csv_file(csvFilepath):
     rows = []
-    with open(csvFilepath, 'r') as csvFile:
+    with open(csvFilepath, 'r', encoding="utf-8") as csvFile:
         csvReader = csv.reader(csvFile, quoting=csv.QUOTE_NONE, delimiter='\n')
         for row in csvReader:
             if len(row) == 1:
