@@ -1,13 +1,15 @@
 from bertopic import BERTopic
 import openai
 from bertopic.representation import OpenAI
-
 import functions
-import pandas as pd
+import Constants
 import plotly
 
+openai.api_key = Constants.API_KEY_OpenAI
+
+
 """Read Data"""
-openai.api_key = "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"
+
 csvFilepath = "Data/TwitterExport/data.csv"
 rows = functions.read_csv_file(csvFilepath)
 conversations = functions.generate_conversations_quotes(rows, False)
