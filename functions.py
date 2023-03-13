@@ -1,22 +1,23 @@
 import csv
+import re
+from langdetect import detect
 
 
-"""This fuctions opens the datafile data.csv"""
+
+"""This fuction opens the datafile data.csv"""
 def read_csv_file(csvFilepath):
     rows = []
     with open(csvFilepath, 'r', encoding="utf-8") as csvFile:
-        csvReader = csv.reader(csvFile, quoting=csv.QUOTE_NONE, delimiter='\n')
-        for row in csvReader:
+        csvreader = csv.reader(csvFile, quoting=csv.QUOTE_NONE, delimiter='\n')
+        for row in csvreader:
             if len(row) == 1:
                 rows.append(row[0])
     return rows
 
 
-
-
-
-
 """This function splits the datafile into conversations based on the fact that each conversation ends with a line surrounded by quotation marks"""
+
+
 def generate_conversations_quotes(rows, is_test):
     conversations = []
     current_conversation = " "
@@ -44,7 +45,40 @@ def generate_conversations_quotes(rows, is_test):
 
     return conversations
 
+
+"This function will loop throw each conversation in conversations and removes all https links, @mentions and special characters"
+
+
+def datacleaning(conversations):
+    cleaned_conversations = []
+    for conversation in conversations:
+        cleaned_conversation = remove_links_mentions_specialcharacters(conversation)
+        cleaned_conversations.append(cleaned_conversation)
+    return cleaned_conversations
+
+
+def remove_links_mentions_specialcharacters(conversation):
+    no_links = re.sub(r"http\S+", r"", conversation)
+    no_specialchar = re.sub(r"[^a-zA-Z0-9’]+", r" ", no_links)
+    #no_mentions = re.sub(r"@\S+", r"", no_specialchar)
+    return no_specialchar
+
+
+
+def filter_english_conversations(conversations):
+    english_conversations= []
+    for conversation in conversations:
+        try:
+            language = detect(conversation) # Detect the language of the conversation
+            if language == "en": # Check if the language is English
+                english_conversations.append(conversation) # If it's English, add it to the filtered collection
+        except:
+            pass
+    return english_conversations
+
 """This function writes each conversation in the list conversations to seperate text files in the folder Data/Conversations"""
+
+
 def write_conversations_to_textfiles(conversations):
     for conversation in conversations:
         conversation_number = conversations.index(conversation)
@@ -53,7 +87,3 @@ def write_conversations_to_textfiles(conversations):
         with open(conversation_filepath, 'w') as conversationFile:
             for line in conversation:
                 conversationFile.write(line)
-
-
-
-
