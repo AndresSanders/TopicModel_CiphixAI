@@ -5,7 +5,7 @@ import functions
 import Constants
 import plotly
 
-openai.api_key = Constants.API_KEY_OpenAI
+openai.api_key = Constants.API_KEY_OpenAI # Set OpenAI API key
 
 
 """Read Data"""
