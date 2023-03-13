@@ -2,9 +2,9 @@ import csv
 import re
 from langdetect import detect
 
+"""opens the csv datafile data.csv"""
 
 
-"""This fuction opens the datafile data.csv"""
 def read_csv_file(csvFilepath):
     rows = []
     with open(csvFilepath, 'r', encoding="utf-8") as csvFile:
@@ -15,7 +15,8 @@ def read_csv_file(csvFilepath):
     return rows
 
 
-"""This function splits the datafile into conversations based on the fact that each conversation ends with a line surrounded by quotation marks"""
+"""Splits the datafile into conversations based on the fact that each conversation/Topic ends with a line 
+surrounded by quotation marks"""
 
 
 def generate_conversations_quotes(rows, is_test):
@@ -46,7 +47,7 @@ def generate_conversations_quotes(rows, is_test):
     return conversations
 
 
-"This function will loop throw each conversation in conversations and removes all https links, @mentions and special characters"
+"removes all https links, @mentions and special characters"
 
 
 def datacleaning(conversations):
@@ -60,23 +61,27 @@ def datacleaning(conversations):
 def remove_links_mentions_specialcharacters(conversation):
     no_links = re.sub(r"http\S+", r"", conversation)
     no_specialchar = re.sub(r"[^a-zA-Z0-9’]+", r" ", no_links)
-    #no_mentions = re.sub(r"@\S+", r"", no_specialchar)
-    return no_specialchar
+    no_mentions = re.sub(r"@\S+", r"", no_specialchar)
+    return no_mentions
 
+
+"""This function filters out all conversations that are not in English"""
 
 
 def filter_english_conversations(conversations):
-    english_conversations= []
+    english_conversations = []
     for conversation in conversations:
         try:
-            language = detect(conversation) # Detect the language of the conversation
-            if language == "en": # Check if the language is English
-                english_conversations.append(conversation) # If it's English, add it to the filtered collection
+            language = detect(conversation)  # Detect the language of the conversation
+            if language == "en":  # Check if the language is English
+                english_conversations.append(conversation)  # If it's English, add it to the filtered collection
         except:
             pass
     return english_conversations
 
-"""This function writes each conversation in the list conversations to seperate text files in the folder Data/Conversations"""
+
+"""This function writes each conversation to separate text files in the folder 
+Data/Conversations"""
 
 
 def write_conversations_to_textfiles(conversations):
