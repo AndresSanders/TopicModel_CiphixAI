@@ -60,9 +60,10 @@ def datacleaning(conversations):
 
 def remove_links_mentions_specialcharacters(conversation):
     no_links = re.sub(r"http\S+", r"", conversation)
-    no_specialchar = re.sub(r"[^a-zA-Z0-9’]+", r" ", no_links)
-    no_mentions = re.sub(r"@\S+", r"", no_specialchar)
-    return no_mentions
+    no_mentions = re.sub(r"@\S+", r"", no_links)
+    no_specialchar = re.sub(r"[^a-zA-Z0-9’]+", r" ", no_mentions)
+
+    return no_specialchar
 
 
 """This function filters out all conversations that are not in English"""
