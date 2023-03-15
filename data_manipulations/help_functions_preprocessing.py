@@ -1,15 +1,14 @@
 import csv
 import re
 from langdetect import detect
+from typing import List
 from pathlib import Path
 
-"""opens the csv datafile data.csv"""
 
-
-def read_csv_file(csvFilepath):
+def read_csv_file(csvfilepath: Path) -> List[str]:
     rows = []
-    with open(csvFilepath, 'r', encoding="utf-8") as csvFile:
-        csvreader = csv.reader(csvFile, quoting=csv.QUOTE_NONE, delimiter='\n')
+    with open(csvfilepath, 'r', encoding="utf-8") as csvfile:
+        csvreader = csv.reader(csvfile, quoting=csv.QUOTE_NONE, delimiter='\n')
         for row in csvreader:
             if len(row) == 1:
                 rows.append(row[0])
@@ -20,7 +19,7 @@ def read_csv_file(csvFilepath):
 surrounded by quotation marks"""
 
 
-def generate_conversations_quotes(rows, is_test):
+def generate_conversations_quotes(rows: List[str], is_test: bool) -> List[str]:
     conversations = []
     current_conversation = " "
     if is_test:
@@ -51,15 +50,7 @@ def generate_conversations_quotes(rows, is_test):
 "removes all https links, @mentions and special characters"
 
 
-def datacleaning(conversations):
-    cleaned_conversations = []
-    for conversation in conversations:
-        cleaned_conversation = remove_links_mentions_specialcharacters(conversation)
-        cleaned_conversations.append(cleaned_conversation)
-    return cleaned_conversations
-
-
-def remove_links_mentions_specialcharacters(conversation):
+def remove_links_mentions_specialcharacters(conversation: str) -> str:
     no_links = re.sub(r"http\S+", r"", conversation)
     no_mentions = re.sub(r"@\S+", r"", no_links)
     no_specialchar = re.sub(r"[^a-zA-Z0-9’]+", r" ", no_mentions)
@@ -70,7 +61,7 @@ def remove_links_mentions_specialcharacters(conversation):
 """This function filters out all conversations that are not in English"""
 
 
-def filter_english_conversations(conversations):
+def filter_english_conversations(conversations: List[str]) -> List[str]:
     english_conversations = []
     for conversation in conversations:
         try:
@@ -84,9 +75,7 @@ def filter_english_conversations(conversations):
 
 """This function writes each conversation to separate text files in the folder 
 Data/Conversations"""
-
-
-def write_conversations_to_textfiles(conversations):
+def write_conversations_to_textfiles(conversations: List[str]) -> None:
     for conversation in conversations:
         conversation_number = conversations.index(conversation)
         conversation_filepath = Path("Data/Conversations/conversation" + str(conversation_number) + ".txt")
